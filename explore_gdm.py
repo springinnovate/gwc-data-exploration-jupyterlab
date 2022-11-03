@@ -12,7 +12,7 @@ END_DATE = '2022-03-01'
 
 
 def main():
-    # countries.gpkg can be downloaded from
+    # countries.gpkg can be downloaded from https://github.com/tsamsonov/r-geo-course/blob/master/data/ne/countries.gpkg
     countries_vector = geopandas.read_file('countries.gpkg')
     country_bounds = countries_vector[
         countries_vector.name == COUNTRY_NAME].bounds
