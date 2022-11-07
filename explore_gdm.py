@@ -39,6 +39,13 @@ def main():
         lat=lat_slice,
         lon=lon_slice,
         time=date_range)
+    netcdf_path = f'{COUNTRY_NAME}_drought_{START_DATE}_{END_DATE}.nc'
+    print(f'saving to {netcdf_path}')
+    local_slice.to_netcdf(netcdf_path)
+    print(f'verifying {netcdf_path} saved correctly')
+    local_dataset = xarray.open_dataset(netcdf_path)
+    print(local_dataset)
+    return
 
     # get exact coords for correct geotransform
     lat_slice = gdm_dataset.sel(lat=lat_slice).lat
