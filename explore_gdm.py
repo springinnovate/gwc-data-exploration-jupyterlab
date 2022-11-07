@@ -18,10 +18,10 @@ def main():
         countries_vector.name == COUNTRY_NAME].bounds
 
     # this was hardcoded in the sample code i got from AER
-    # gdm_dataset = xarray.open_dataset(
-    #     'http://h2o-dev.aer-aws-nonprod.net/thredds/dodsC/gwsc/gdm')
+    gdm_dataset = xarray.open_dataset(
+        'http://h2o-dev.aer-aws-nonprod.net/thredds/dodsC/gwsc/gdm')
 
-    gdm_dataset = xarray.open_dataset("H2O_GlobalDroughtIndex_ECMWF-ERA5_2022-07_2022-09.nc")
+    #gdm_dataset = xarray.open_dataset("H2O_GlobalDroughtIndex_ECMWF-ERA5_2022-07_2022-09.nc")
 
     # GDM has dates in the byte format of '2012-01-01T00:00:00Z', so this
     # converts it to that
@@ -39,6 +39,9 @@ def main():
         lat=lat_slice,
         lon=lon_slice,
         time=date_range)
+
+    print(numpy.unique(local_slice.drought))
+
     netcdf_path = f'{COUNTRY_NAME}_drought_{START_DATE}_{END_DATE}.nc'
     print(f'saving to {netcdf_path}')
     local_slice.to_netcdf(netcdf_path)
