@@ -12,6 +12,10 @@ END_DATE = '2022-03-01'
 
 
 def main():
+    # gdm_dataset = xarray.open_dataset('nclimdiv.nc')
+    # print(gdm_dataset)
+    # return
+
     # countries.gpkg can be downloaded from https://github.com/tsamsonov/r-geo-course/blob/master/data/ne/countries.gpkg
     countries_vector = geopandas.read_file('countries.gpkg')
     country_bounds = countries_vector[
@@ -20,15 +24,21 @@ def main():
     # this was hardcoded in the sample code i got from AER
     gdm_dataset = xarray.open_dataset(
         'http://h2o-dev.aer-aws-nonprod.net/thredds/dodsC/gwsc/gdm')
-
-    #gdm_dataset = xarray.open_dataset("H2O_GlobalDroughtIndex_ECMWF-ERA5_2022-07_2022-09.nc")
-
+    print(gdm_dataset)
+    print('*')
     # GDM has dates in the byte format of '2012-01-01T00:00:00Z', so this
     # converts it to that
-    date_range = numpy.array([
-        bytes(x, 'utf-8') for x in
-        pandas.date_range(start=START_DATE, end=END_DATE, freq='M').strftime(
-            '%Y-%m-01T00:00:00Z')])
+    # fix the S64 coding to a real datetime
+    gdm_dataset['time'] = pandas.DatetimeIndex(gdm_dataset.time.str.decode('utf-8').astype('datetime64'))
+    print(gdm_dataset)
+    print('*')
+    # # this one from nick that he could open in ArcGIS
+    # gdm_dataset = xarray.open_dataset("H2O_GlobalDroughtIndex_ECMWF-ERA5_2022-07_2022-09.nc")
+    # print(gdm_dataset)
+    # print('*')
+
+    date_range = pandas.date_range(start=START_DATE, end=END_DATE, freq='MS')
+    print(date_range)
 
     # lat slice goes from pos to neg because it's 90 to -90 degrees so max first
     lat_slice = slice(float(country_bounds.maxy), float(country_bounds.miny))
